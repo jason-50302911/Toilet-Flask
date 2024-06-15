@@ -7,7 +7,7 @@ from Controllers.dataController import DataFetch
 
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app)
 app.json_encoder = json.JSONEncoder
 
 load_dotenv()
@@ -15,12 +15,12 @@ load_dotenv()
 fetch_data = DataFetch(dict_path="data/idDict.json",
                        id_path="data/place.json")
 
-@app.route("/")
+@app.route("/", methods=['GET'])
 def default():
     return jsonify({"hello"}), 200
 
-@app.route("/api/ownapi", methods=["GET"])
-def home():
+@app.route("/api", methods=["GET"])
+def get_data():
     destin_message = request.args
     if destin_message["target"] == "toilets":
         location = { "lat": destin_message["lat"], "lng": destin_message["lng"] }
