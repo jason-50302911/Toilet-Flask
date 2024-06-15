@@ -12,9 +12,8 @@ app.json_encoder = json.JSONEncoder
 
 load_dotenv()
 
-fetch_data = DataFetch(place_path=os.getenv("PLACE_PATH"),
-                       sort_path=os.getenv("SORT_PATH"),
-                       id_path=os.getenv("ID_PATH"))
+fetch_data = DataFetch(dict_path="data/idDict.json",
+                       id_path="data/place.json")
 
 @app.route("/api/ownapi", methods=["GET"])
 def home():
@@ -38,4 +37,4 @@ def home():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False, host='0.0.0.0')

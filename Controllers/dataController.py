@@ -6,15 +6,14 @@ from DataProcess.positionProcess import id_encoder
 from typing import Union
 
 class DataFetch:
-    def __init__(self, place_path, sort_path, id_path):
-        self.place_path = place_path
-        self.sort_file = read_json(sort_path)
+    def __init__(self, dict_path, id_path):
+        self.dict_file = read_json(dict_path)
         self.id_file = read_json(id_path)
     
     def find_id_list(self, id_list: list[str]) -> list:
         data = []
         for id in id_list: 
-            detail_list = self.sort_file[id[0]][id[1:3]]
+            detail_list = self.dict_file[id[0]][id[1:3]]
             for detail in detail_list:
                 if detail["number"] == id:
                     data.append(detail)
@@ -32,7 +31,7 @@ class DataFetch:
             data = self.find_id_list(id_list=id_list)
         elif isinstance(id_list, str):
             data = []
-            detail_list = self.sort_file[id_list[0]][id_list[1:3]]
+            detail_list = self.dict_file[id_list[0]][id_list[1:3]]
             for detail in detail_list:
                 if detail["number"] == id:
                     data.append(detail)
