@@ -13,7 +13,7 @@ app.json_encoder = json.JSONEncoder
 load_dotenv()
 
 fetch_data = DataFetch(dict_path="data/idDict.json",
-                       id_path="data/place.json")
+                       id_path="data/posid.json")
 
 @app.route("/", methods=['GET'])
 def default():
