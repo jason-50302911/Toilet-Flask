@@ -15,7 +15,7 @@ load_dotenv()
 fetch_data = DataFetch(dict_path="data/idDict.json",
                        id_path="data/posid.json")
 
-@app.route("/api", methods=["GET"])
+@app.route("/", methods=["GET"])
 def get_data():
     destin_message = request.args
     if destin_message["target"] == "toilets":
