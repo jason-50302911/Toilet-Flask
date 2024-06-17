@@ -12,7 +12,7 @@ app.json_encoder = json.JSONEncoder
 fetch_data = DataFetch(dict_path="data/idDict.json",
                        id_path="data/posid.json")
 
-@app.route("/", methods=["GET"])
+@app.route("/")
 def get_data():
     destin_message = request.args
     if destin_message["target"] == "toilets":
