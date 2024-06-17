@@ -15,10 +15,6 @@ load_dotenv()
 fetch_data = DataFetch(dict_path="data/idDict.json",
                        id_path="data/posid.json")
 
-@app.route("/", methods=['GET'])
-def default():
-    return jsonify({"hello"}), 200
-
 @app.route("/api", methods=["GET"])
 def get_data():
     destin_message = request.args
