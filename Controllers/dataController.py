@@ -1,7 +1,6 @@
 import os
 
 from Controllers.readDataController import read_json
-from dotenv import load_dotenv
 from DataProcess.positionProcess import id_encoder
 from typing import Union
 
