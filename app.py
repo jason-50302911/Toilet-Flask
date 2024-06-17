@@ -7,7 +7,7 @@ from Controllers.dataController import DataFetch
 
 
 app = Flask(__name__)
-cors = CORS(app, origins="http://localhost:4040/")
+cors = CORS(app, origins="*")
 app.json_encoder = json.JSONEncoder
 
 load_dotenv()
