@@ -1,4 +1,4 @@
-import os, json
+import json
 
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -34,6 +34,8 @@ def get_data():
         
         app.logger.info(f"Delivering place data successful")
         return jsonify(response_data), 200
+    else:
+        return jsonify("welcome to the Jason google map"), 200
 
 
 if __name__ == "__main__":
