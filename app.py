@@ -1,13 +1,13 @@
 import json
 
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from Controllers.dataController import DataFetch
 
 
 app = Flask(__name__)
-CORS(app)
+cors = CORS(app)
 app.json_encoder = json.JSONEncoder
 
 load_dotenv()
@@ -16,6 +16,7 @@ fetch_data = DataFetch(dict_path="data/idDict.json",
                        id_path="data/posid.json")
 
 @app.route("/", methods=["GET"])
+@cross_origin()
 def get_data():
     destin_message = request.args
     if destin_message["target"] == "toilets":
