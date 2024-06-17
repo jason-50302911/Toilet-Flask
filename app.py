@@ -1,16 +1,13 @@
 import json
 
-from flask_cors import CORS, cross_origin
-from dotenv import load_dotenv
+from flask_cors import CORS
 from flask import Flask, request, jsonify
 from Controllers.dataController import DataFetch
 
 
 app = Flask(__name__)
-cors = CORS(app, origins="*")
+cors = CORS(app)
 app.json_encoder = json.JSONEncoder
-
-load_dotenv()
 
 fetch_data = DataFetch(dict_path="data/idDict.json",
                        id_path="data/posid.json")
