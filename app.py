@@ -33,7 +33,7 @@ def get_data():
         return jsonify(response_data), 200
     else:
         return jsonify("welcome to the Jason google map"), 200
-
+    
 
 if __name__ == "__main__":
     app.run(debug=False, host='0.0.0.0')
