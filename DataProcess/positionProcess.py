@@ -31,6 +31,22 @@ def id_encoder(number_lat: str, number_lng: str) -> int:
 
     return lat_id, lng_id, float_id
 
+def toilet_identify(toilet_type: str) -> Union[str, int]:
+    if toilet_type == "親子廁所":
+        return 1
+    elif toilet_type == "男廁所":
+        return 2
+    elif toilet_type == "女廁所":
+        return 3
+    elif toilet_type == "無障礙廁所":
+        return 4
+    elif toilet_type == "性別友善廁所":
+        return 5
+    elif toilet_type == "混合廁所":
+        return 6
+    else:
+        return toilet_type
+
 
 def create_id_data(data: list, sample: dict, index: int, number_check: int) -> int:
     check_flag = False
@@ -38,11 +54,18 @@ def create_id_data(data: list, sample: dict, index: int, number_check: int) -> i
     cut_lat = sample["latitude"][:7]
     cut_lng = sample["longitude"][:8]
     
+    toilet_type = toilet_identify(toilet_type=sample["type"])
+    
+    if isinstance(toilet_type, str):
+        raise ValueError(f"Toilet type is not including in identity list: {toilet_type}")
+    
+    categroy = { "id":sample["number"], "type": toilet_type }
+    
     store_block = {
         "uuid": index,
-        "id": [sample["number"]],
+        "categroy": [categroy],
         "lat": cut_lat,
-        "lng": cut_lng
+        "lng": cut_lng,
     }
     
     if len(data) == 0:
@@ -51,7 +74,7 @@ def create_id_data(data: list, sample: dict, index: int, number_check: int) -> i
     else:
         for exist in data:
             if exist["lat"] == cut_lat and exist["lng"] == cut_lng:
-                exist["id"].append(sample["number"])
+                exist["categroy"].append(categroy)
                 number_check += 1
                 check_flag = True
         if check_flag is False:

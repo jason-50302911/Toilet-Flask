@@ -63,8 +63,6 @@ class DataFetch:
     
 if __name__ == "__main__":
     
-    load_dotenv()
-    
     data = DataFetch(place_path=os.getenv("PLACE_PATH"),
                      sort_path=os.getenv("SORT_PATH"),
                      id_path=os.getenv("ID_PATH"))
