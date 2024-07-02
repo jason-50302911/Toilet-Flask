@@ -1,9 +1,12 @@
 import json
 import os
+import string
 
 from typing import Union
 from tqdm.auto import tqdm
 from pathlib import Path
+
+NUMBER_TRANSLATE = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9, "十":10}
 
 def create_empty_dict(input_dict: dict) -> dict:
     for lng_id in range(117, 124, 1):
@@ -46,43 +49,119 @@ def toilet_identify(toilet_type: str) -> Union[str, int]:
         return 6
     else:
         return toilet_type
+    
+def check_vertical_relation(sample: str) -> str:
+    parse_word = None
+    for index, word in enumerate(sample):
+        if word == "樓":
+            if sample[index-1].isdigit():
+                parse_word = sample[index-1] + "F"
+            elif sample[index-1] in NUMBER_TRANSLATE.keys():
+                parse_word = str(NUMBER_TRANSLATE[sample[index-1]]) + "F"
+        elif word == "B":
+            if len(sample) > index + 1:
+                parse_word = word + sample[index+1]
+        elif word == "F":
+            parse_word = sample[index-1] + word
+            
+    if "地下" in sample:
+        parse_word = "B1"
+        
+    if parse_word == None:
+        parse_word = "1F"
+        
+    return parse_word
 
+# def check_same_char(str1: str, str2: str) ->str:
+#     return_name = ''
+#     punc = string.punctuation
+#     build_name = "樓棟館"
+#     str1_len = len(str1)
+#     str2_len = len(str2)
+    
+#     length = str1_len if str1_len < str2_len else str2_len
+    
+#     for index in range(length-1):
+#         if str1[index] == str2[index] and not str1[index] in punc:
+#             if not str1[index] in build_name:
+#                 return_name = return_name + str1[index]
+            
+#     return return_name
+
+def replacement(info: dict):
+    name = None
+    man = "男廁廁所"
+    woman = "女廁廁所"
+
+    if man in info["name"]:
+        name = info["name"].replace(man, "")
+    elif woman in info["name"]:
+        name = info["name"].replace(woman, "")
+    else:
+        name = info["name"].replace(info["type"], "")
+
+    if info["floor"] in name:
+        name = info["name"].replace(info["floor"], "")
+        
+    return name
+
+# def create_real_name(data: list):
+#     ref_name = None
+
+#     ref_name = replacement(info=data[0])
+
+#     for info in data:
+#         target_name = replacement(info=info)
+#         ref_name = check_same_char(str1=ref_name, str2=target_name)
+        
+#     return ref_name
+            
+
+def create_floor_list(data: list):
+    floor_list = []
+    for aggre_place in data:
+        if aggre_place["floor"] not in floor_list:
+            floor_list.append(aggre_place["floor"])
+    
+    return floor_list    
 
 def create_id_data(data: list, sample: dict, index: int, number_check: int) -> int:
-    check_flag = False
     
-    cut_lat = sample["latitude"][:7]
-    cut_lng = sample["longitude"][:8]
-    
-    toilet_type = toilet_identify(toilet_type=sample["type"])
-    
-    if isinstance(toilet_type, str):
-        raise ValueError(f"Toilet type is not including in identity list: {toilet_type}")
-    
-    categroy = { "id":sample["number"], "type": toilet_type }
+    cut_lat = sample["lat"][:7]
+    cut_lng = sample["lng"][:9]
     
     store_block = {
         "uuid": index,
-        "categroy": [categroy],
+        "name": replacement(info=sample["aggregate"][0]),
         "lat": cut_lat,
         "lng": cut_lng,
+        "address": sample["address"],
+        "floorList": create_floor_list(data=sample["aggregate"]),
     }
     
-    if len(data) == 0:
-        data.append(store_block)
-        number_check += 1
-    else:
-        for exist in data:
-            if exist["lat"] == cut_lat and exist["lng"] == cut_lng:
-                exist["categroy"].append(categroy)
-                number_check += 1
-                check_flag = True
-        if check_flag is False:
-            data.append(store_block)
-            number_check += 1
+    for info in sample["aggregate"]:
+        info["type"] = toilet_identify(toilet_type=info["type"])
+        
+    store_block["aggregate"] = sample["aggregate"]
     
+    data.append(store_block)
+    number_check += 1
+
     return number_check
+
+def write_name_list(input_data: list) -> list:
+    id_list = []
     
+    number_check = 0
+
+    for index, sample in tqdm(enumerate(input_data)):
+        
+        number_check = create_id_data(data=id_list, sample=sample, index=index, number_check=number_check)
+        
+    print(f"Check Number: {number_check}")
+    
+    return id_list
+
 
 
 def write_id_list(input_data: list) -> list:
@@ -93,8 +172,8 @@ def write_id_list(input_data: list) -> list:
 
     for index, sample in tqdm(enumerate(input_data)):
         
-        lat_id, lng_id, float_id = id_encoder(number_lat=sample["latitude"], 
-                                              number_lng=sample["longitude"])
+        lat_id, lng_id, float_id = id_encoder(number_lat=sample["lat"], 
+                                              number_lng=sample["lng"])
 
         
         number_check = create_id_data(data=id_dict[str(lng_id)][str(lat_id)][str(float_id)], sample=sample, index=index, number_check=number_check)
@@ -130,15 +209,13 @@ def write_data(input_data: Union[dict, list],
             print(f"\nWriting file error: {error}")
 
 
-
-
 if __name__ == "__main__":
     try: 
-        with open("data/toilet_data.json", mode="r", encoding="utf-8-sig") as file:
+        with open("data/name.json", mode="r", encoding="utf-8-sig") as file:
             toilet_data_json = json.load(file)
             
-        id_dict = write_id_list(toilet_data_json)
-        write_data(input_data=id_dict, file_name="posid")
+        id_dict = write_name_list(toilet_data_json)
+        write_data(input_data=id_dict, file_name="checkName")
     except Exception as error:
         print(f"Error message: {error}")
 

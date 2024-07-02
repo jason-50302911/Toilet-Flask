@@ -30,6 +30,9 @@ def sort_id(input_data: list) -> dict:
         
         check_city_id(check_dict=check_dict, city_id=city_id)
         
+        if "廁所" not in sample["name"]:
+            sample["name"] = sample["name"] + "廁所"
+        
         init_dict[key][city_id].append(sample)
         
     return init_dict

@@ -15,24 +15,18 @@ fetch_data = DataFetch(dict_path="data/idDict.json",
 @app.route("/", methods=['GET', 'POST'])
 def get_data():
     destin_message = request.args
+    app.logger.info(destin_message)
     if destin_message["target"] == "toilets":
         location = { "lat": destin_message["lat"], "lng": destin_message["lng"] }
-        app.logger.info(f"Data request messsage: {location}")
-        
         response_data = fetch_data.toilet_around_place(location)
-        
         app.logger.info(f"Retrieving data successful: {len(response_data)}")
         return jsonify(response_data), 200
     
     elif destin_message["target"] == "details":
-        app.logger.info(destin_message)
         data = fetch_data.parse_tuple_list(parse_list=destin_message)
         response_data = fetch_data.fetch_detail(id_list=data)
-        
         app.logger.info(f"Delivering place data successful")
         return jsonify(response_data), 200
-    else:
-        return jsonify("welcome to the Jason google map"), 200
     
 
 if __name__ == "__main__":
