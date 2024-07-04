@@ -25,7 +25,7 @@ def get_data():
         data = fetch_data.parse_tuple_list(parse_list=destin_message)
         response_data = fetch_data.fetch_detail(id_list=data)
         
-    elif destin_message["target"] == "initMap":
+    elif destin_message["target"] == "finding":
         location = { "lat": destin_message["lat"], "lng": destin_message["lng"] }
         data = fetch_data.toilet_around_place(location)
         nearest_data = fetch_data.nearest_toilet(location=location, toilet_list=data)
