@@ -3,6 +3,7 @@ import os
 from Controllers.readDataController import read_json
 from DataProcess.positionProcess import id_encoder
 from typing import Union
+from geopy.distance import geodesic
 
 class DataFetch:
     def __init__(self, dict_path, id_path):
@@ -36,8 +37,32 @@ class DataFetch:
                     data.append(detail)
         return data
     
+    def nearest_toilet(self, location: dict, toilet_list: list) -> dict:
+        nearest = None
+        near_uuid = None
+        near_loc = None
+        now_lat = float(location["lat"])
+        now_lng = float(location["lng"])
+        for toilet in toilet_list:
+            
+            toilet_lat = float(toilet["lat"])
+            toilet_lng = float(toilet["lng"])
+            center = { "lat": (toilet_lat + now_lat) / 2, "lng": (toilet_lng + now_lng) / 2 }
+            distance = geodesic((now_lat, now_lng), (toilet_lat, toilet_lng)).km
+            if nearest is None:
+                nearest = distance
+                near_uuid = toilet["uuid"]
+                near_loc = center
+            elif nearest > distance:
+                nearest = distance
+                near_uuid = toilet["uuid"]
+                near_loc = center
+                
+        data = { "nearest_uuid": near_uuid, "distance": nearest, "near_loc": near_loc }
 
-    def toilet_around_place(self, location: dict):
+        return data
+
+    def toilet_around_place(self, location: dict) -> list:
         lat = float(location["lat"])
         lng = float(location["lng"])
         return_data = []
