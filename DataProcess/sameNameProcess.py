@@ -1,7 +1,9 @@
 import json
+import itertools
 
 from tqdm.auto import tqdm
 from positionProcess import write_data, check_vertical_relation
+
 
 def create_small_aggre_data(layer2_data: list, compar_list: list):
     for sample in layer2_data:
@@ -28,21 +30,46 @@ def create_small_aggre_data(layer2_data: list, compar_list: list):
                     check_flag = True
             if check_flag is False:
                 compar_list.append(store_block)
-
-
-def create_aggre_data(data: dict) -> dict:
-    compar_list = []
-    for layer_1 in tqdm(data.values()):
-        for layer_2 in layer_1.values():
-            create_small_aggre_data(layer2_data=layer_2, compar_list=compar_list)
+                
+                
+def sep_aggre_list(data: list):
+    sep_data = []
+    
+    for sample in tqdm(data):
+        check_flag = False
+        for aggre in sample["aggregate"]:
+            if sample["name"] not in aggre["name"]: 
+                check_flag = True
             
+        if check_flag:
+            sep_data.append(sample)
+            
+    
+    return sep_data
+    
+    
+def aggre_name(data: list) -> list:
+    compar_list = []
+    for sample in tqdm(data):
+        # breakpoint()
+        if len(compar_list) == 0:
+            compar_list.append(sample)
+        else:
+            check_flag = False
+            for com_sample in compar_list:
+                if com_sample["name"] == sample["name"]:
+                    com_sample["aggregate"] = list(itertools.chain(com_sample["aggregate"], sample["aggregate"]))
+                    check_flag = True    
+            if check_flag is False: compar_list.append(sample)
+        
     return compar_list
+            
             
 if __name__ == "__main__":
     try: 
-        with open("data/idDict.json", mode="r", encoding="utf-8-sig") as file:
+        with open("data/checkName.json", mode="r", encoding="utf-8-sig") as file:
             toilet_data_json = json.load(file)
-        same_name = create_aggre_data(data=toilet_data_json)
+        same_name = aggre_name(data=toilet_data_json)
         write_data(input_data=same_name, file_name="name")
     except Exception as error:
         print(f"Error message: {error}")

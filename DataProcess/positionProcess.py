@@ -170,12 +170,13 @@ def write_id_list(input_data: list) -> list:
     number_check = 0
 
     for index, sample in tqdm(enumerate(input_data)):
-        
         lat_id, lng_id, float_id = id_encoder(number_lat=sample["lat"], 
                                               number_lng=sample["lng"])
 
+        number_check = index
         
-        number_check = create_id_data(data=id_dict[str(lng_id)][str(lat_id)][str(float_id)], sample=sample, index=index, number_check=number_check)
+        id_dict[str(lng_id)][str(lat_id)][str(float_id)].append(sample)
+        # number_check = create_id_data(data=id_dict[str(lng_id)][str(lat_id)][str(float_id)], sample=sample, index=index, number_check=number_check)
         
     print(f"Check Number: {number_check}")
         
@@ -213,8 +214,8 @@ if __name__ == "__main__":
         with open("data/name.json", mode="r", encoding="utf-8-sig") as file:
             toilet_data_json = json.load(file)
             
-        id_dict = write_name_list(toilet_data_json)
-        write_data(input_data=id_dict, file_name="checkName")
+        id_dict = write_id_list(toilet_data_json)
+        write_data(input_data=id_dict, file_name="posid")
     except Exception as error:
         print(f"Error message: {error}")
 
