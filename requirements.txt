@@ -4,4 +4,3 @@ flask_cors
 tqdm
 pathlib
 geopy
-itertools
