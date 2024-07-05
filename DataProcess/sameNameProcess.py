@@ -67,9 +67,9 @@ def aggre_name(data: list) -> list:
             
 if __name__ == "__main__":
     try: 
-        with open("data/checkName.json", mode="r", encoding="utf-8-sig") as file:
+        with open("data/name.json", mode="r", encoding="utf-8-sig") as file:
             toilet_data_json = json.load(file)
         same_name = aggre_name(data=toilet_data_json)
-        write_data(input_data=same_name, file_name="name")
+        write_data(input_data=same_name, file_name="name1")
     except Exception as error:
         print(f"Error message: {error}")

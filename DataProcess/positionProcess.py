@@ -211,11 +211,10 @@ def write_data(input_data: Union[dict, list],
 
 if __name__ == "__main__":
     try: 
-        with open("data/name.json", mode="r", encoding="utf-8-sig") as file:
+        with open("data/name1.json", mode="r", encoding="utf-8-sig") as file:
             toilet_data_json = json.load(file)
             
         id_dict = write_id_list(toilet_data_json)
         write_data(input_data=id_dict, file_name="posid")
     except Exception as error:
         print(f"Error message: {error}")
-
