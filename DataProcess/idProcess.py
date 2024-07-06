@@ -1,6 +1,6 @@
 import json
 
-from positionProcess import write_data
+from positionProcess import write_data, id_encoder
 from tqdm.auto import tqdm
 
 def create_empty_dict(input_des):
@@ -37,13 +37,23 @@ def sort_id(input_data: list) -> dict:
         
     return init_dict
 
+def put_data(data: list, ref_data: dict) -> dict:
+    for sample in tqdm(data):
+        key = sample["number"][0]
+        city_id = sample["number"][1:3]
+        print(len(ref_data[key][city_id]))
+        ref_data[key][city_id].append(sample)
+        print(len(ref_data[key][city_id]))
+
 if __name__ == "__main__":
     try:
-        with open("data/toilet_data.json", mode="r", encoding="utf-8-sig") as file:
-            toilet_data_json = json.load(file)
-        id_dict = sort_id(input_data=toilet_data_json)
-        for country, city in id_dict.items():
-            print(country, len(city))
-        write_data(input_data=id_dict, file_name="idDict")
+        with open("data/easyToilet.json", mode="r", encoding="utf-8-sig") as file:
+            easy_toilet = json.load(file)
+        
+        with open("data/idDictOK.json", mode="r", encoding="utf-8-sig") as file:
+            id_ok = json.load(file)
+            
+        put_data(data=easy_toilet, ref_data=id_ok)
+        write_data(input_data=id_ok, file_name="idDictSuccess")
     except Exception as error:
         print(f"Error message: {error}")

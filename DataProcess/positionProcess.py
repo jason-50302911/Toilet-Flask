@@ -31,15 +31,15 @@ def id_encoder(number_lat: str, number_lng: str) -> int:
     
     float_id = int(lat_identity[3:5] + lng_identity[4:6])
 
-    return lat_id, lng_id, float_id
+    return str(lat_id), str(lng_id), str(float_id)
 
 def toilet_identify(toilet_type: str) -> Union[str, int]:
     if toilet_type == "親子廁所":
-        return 1
-    elif toilet_type == "男廁所":
-        return 2
-    elif toilet_type == "女廁所":
         return 3
+    elif toilet_type == "男廁所":
+        return 1
+    elif toilet_type == "女廁所":
+        return 2
     elif toilet_type == "無障礙廁所":
         return 4
     elif toilet_type == "性別友善廁所":
@@ -126,57 +126,54 @@ def create_floor_list(data: list):
 
 def create_id_data(data: list, sample: dict, index: int, number_check: int) -> int:
     
-    cut_lat = sample["lat"][:7]
-    cut_lng = sample["lng"][:9]
+    cut_lat = sample["latitude"][:7]
+    cut_lng = sample["longitude"][:9]
     
     store_block = {
         "uuid": index,
-        "name": replacement(info=sample["aggregate"][0]),
+        "name": sample["name"],
+        "address": sample["address"],
+        "type": toilet_identify(toilet_type=sample["type"]),
         "lat": cut_lat,
         "lng": cut_lng,
-        "address": sample["address"],
+        "patterns": sample["patterns"],
+        "time": sample["time"],
         "floorList": create_floor_list(data=sample["aggregate"]),
+        "aggregate": sample["aggregate"]
     }
     
-    for info in sample["aggregate"]:
-        info["type"] = toilet_identify(toilet_type=info["type"])
-        
-    store_block["aggregate"] = sample["aggregate"]
-    
     data.append(store_block)
-    number_check += 1
+    number_check += len(sample["aggregate"])
 
     return number_check
 
-def write_name_list(input_data: list) -> list:
-    id_list = []
+# def write_name_list(input_data: list) -> list:
+#     id_list = []
     
-    number_check = 0
+#     number_check = 0
 
-    for index, sample in tqdm(enumerate(input_data)):
+#     for index, sample in tqdm(enumerate(input_data)):
         
-        number_check = create_id_data(data=id_list, sample=sample, index=index, number_check=number_check)
+#         number_check = create_id_data(data=id_list, sample=sample, index=index, number_check=number_check)
         
-    print(f"Check Number: {number_check}")
+#     print(f"Check Number: {number_check}")
     
-    return id_list
+#     return id_list
 
 
 
-def write_id_list(input_data: list) -> list:
+def write_pos_dict(input_data: list) -> dict:
     id_dict = {}
     create_empty_dict(input_dict=id_dict)
     
     number_check = 0
 
     for index, sample in tqdm(enumerate(input_data)):
-        lat_id, lng_id, float_id = id_encoder(number_lat=sample["lat"], 
-                                              number_lng=sample["lng"])
-
-        number_check = index
+        lat_id, lng_id, float_id = id_encoder(number_lat=sample["latitude"], 
+                                              number_lng=sample["longitude"])
         
-        id_dict[str(lng_id)][str(lat_id)][str(float_id)].append(sample)
-        # number_check = create_id_data(data=id_dict[str(lng_id)][str(lat_id)][str(float_id)], sample=sample, index=index, number_check=number_check)
+        # id_dict[lng_id][lat_id][float_id].append(sample)
+        number_check = create_id_data(data=id_dict[lng_id][lat_id][float_id], sample=sample, index=index, number_check=number_check)
         
     print(f"Check Number: {number_check}")
         
@@ -211,10 +208,10 @@ def write_data(input_data: Union[dict, list],
 
 if __name__ == "__main__":
     try: 
-        with open("data/name1.json", mode="r", encoding="utf-8-sig") as file:
-            toilet_data_json = json.load(file)
-            
-        id_dict = write_id_list(toilet_data_json)
-        write_data(input_data=id_dict, file_name="posid")
+        with open("data/posList.json", mode="r", encoding="utf-8-sig") as file:
+            id_dict = json.load(file)
+        
+        pos_dict = write_pos_dict(input_data=id_dict)
+        write_data(input_data=pos_dict, file_name="posid_update")
     except Exception as error:
         print(f"Error message: {error}")
