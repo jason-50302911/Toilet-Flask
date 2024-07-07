@@ -116,7 +116,7 @@ class DataFetch:
             if data_length <= 75 or data_length == 0:
                 tra_data = data
             else:
-                data_diff = math.floor(len(data) / 75)
+                data_diff = math.floor(len(data) / 45)
                 for index, _ in enumerate(data):
                     if index % data_diff == 0:
                         tra_data.append(data[index])       
