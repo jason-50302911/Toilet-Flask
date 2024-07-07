@@ -18,8 +18,14 @@ def get_data():
     response_data = None
     app.logger.info(destin_message)
     if destin_message["target"] == "toilets":
-        location = { "lat": destin_message["lat"], "lng": destin_message["lng"] }
-        response_data = fetch_data.toilet_around_place(location)
+        bounds = { 
+                    "latNorth": destin_message["latNorth"], 
+                    "latSouth": destin_message["latSouth"],
+                    "lngWest": destin_message["lngWest"],
+                    "lngEast": destin_message["lngEast"]
+                }
+        response_data = fetch_data.inside_bounds_toilet(bounds=bounds)
+        app.logger.info(f"Response data length: {len(response_data)}")
     
     elif destin_message["target"] == "details":
         data = fetch_data.parse_tuple_list(parse_list=destin_message)
@@ -27,7 +33,7 @@ def get_data():
         
     elif destin_message["target"] == "finding":
         location = { "lat": destin_message["lat"], "lng": destin_message["lng"] }
-        data = fetch_data.toilet_around_place(location)
+        data = fetch_data.toilet_around_place(location=location)
         nearest_data = fetch_data.nearest_toilet(location=location, toilet_list=data)
         app.logger.info(nearest_data["near_loc"])
         response_data = { 

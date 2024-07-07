@@ -1,4 +1,6 @@
 import os
+import numpy as np
+import math
 
 from Controllers.readDataController import read_json
 from DataProcess.positionProcess import id_encoder
@@ -66,11 +68,12 @@ class DataFetch:
         lat = float(location["lat"])
         lng = float(location["lng"])
         return_data = []
+
         
         if (lat > 27.99 or lat < 20.01) or (lng > 123.99 or lng < 120.01):
             return return_data
         else:
-            for control_lng in range(-1, 3):
+            for control_lng in range(-1, 2):
                 temp_lng = lng + control_lng * 0.01
                 for control_lat in range(-1, 2):
                     temp_lat = lat + control_lat * 0.01
@@ -79,12 +82,47 @@ class DataFetch:
                                                         number_lng=str(temp_lng))
                     
                     filter_list = self.id_file[str(lng_id)][str(lat_id)][str(float_id)]
-
+                    
                     return_data.append(filter_list)
                     
             return_data = [item for sublist in return_data for item in sublist]
            
         return return_data
+    
+    def inside_bounds_toilet(self, bounds: dict) -> list:
+        latNorth = float(bounds["latNorth"]) 
+        latSouth = float(bounds["latSouth"])
+        lngWest = float(bounds["lngWest"])
+        lngEast = float(bounds["lngEast"])
+        data = []
+        tra_data = []
+        
+        if (latNorth > 28 or latSouth < 20) or (lngEast > 124 or lngWest < 117):
+            return data
+        else:
+            for control_lng in np.arange(lngWest, lngEast + 0.01, 0.01):
+                for control_lat in np.arange(latSouth, latNorth + 0.01, 0.01):
+                    
+                    lat_id, lng_id, float_id = id_encoder(number_lat=str(control_lat),
+                                                          number_lng=str(control_lng))
+                    
+                    filter_list = self.id_file[str(lng_id)][str(lat_id)][str(float_id)]
+                    
+                    data.append(filter_list)
+                    
+            data = [item for sublist in data for item in sublist]
+            data_length = len (data)
+            
+            if data_length <= 75 or data_length == 0:
+                tra_data = data
+            else:
+                data_diff = math.floor(len(data) / 75)
+                for index, _ in enumerate(data):
+                    if index % data_diff == 0:
+                        tra_data.append(data[index])       
+        
+        return tra_data
+ 
     
 if __name__ == "__main__":
     
