@@ -40,7 +40,7 @@ def add_uuid(data: list) -> list:
         uuid += 1
         sample["uuid"] = uuid
         
-def sort_type(name: str) -> str:
+def sort_for_type(name: str) -> str:
     type_name = None
     conv_store = ["統一超商", "全家", "萊爾富", "7-11", "來來", "OK", "超商"]
     gas_sta = ["加油站", "中油", "統一精工"]
@@ -52,8 +52,20 @@ def sort_type(name: str) -> str:
         type_name = "加油站"
     elif name in chain_store:
         type_name = "連鎖商店"
+    else: 
+        type_name = "公廁"
     
     return type_name
+
+def create_sort(data: dict) -> None:
+    for header_value in tqdm(data.values()):
+        for sec_value in header_value.values():
+            for sample in sec_value:
+                if sample["type2"] == "一般商家":
+                    sample["type3"] = sample["type2"]
+                else:
+                    type3 = sort_for_type(name=sample["name"])
+                    sample["type3"] = type3
         
 def grab_type2(data: list) -> list:
     grab_list = []
@@ -114,8 +126,9 @@ if __name__ == "__main__":
         # comb_name(data=id_dict, check_name=check_name)
         # add_uuid(data=easy_list)
         # comb_pos(data=easy_list, pos_id=pos_id)
-        obey_data_rule(data=id_dict)
+        # obey_data_rule(data=id_dict)
         # grab_type2(data=id_dict)
-        write_data(input_data=id_dict, file_name="id_dict")
+        create_sort(data=id_dict)
+        write_data(input_data=id_dict, file_name="idDict1")
     except Exception as error:
         print(f"Error message: {error}")

@@ -1,7 +1,7 @@
 import json
 
 from flask_cors import CORS
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from Controllers.dataController import DataFetch
 
 
@@ -49,6 +49,10 @@ def get_data():
     else:
         app.logger.info(f"Delivering place data successful")
         return jsonify(response_data), 200
-
+    
+@app.route("/paid")
+def paid_page():
+    return render_template("./paidPage.html")
+    
 if __name__ == "__main__":
     app.run(debug=False, host='0.0.0.0')

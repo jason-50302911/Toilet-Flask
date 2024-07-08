@@ -190,7 +190,8 @@ def write_data(input_data: Union[dict, list],
     if os.path.exists(file_path): 
         file_size = file_path.stat().st_size
         if file_size > 10: 
-            print(f"{file_name} file has been writen, skip writing...")
+            print(f"{file_name} file has been writen, deleting context and start writing...")
+            write_mode = True
         else: 
             print(f"The {file_name} file is empty, starting writing file...")
             write_mode = True
@@ -212,6 +213,6 @@ if __name__ == "__main__":
             id_dict = json.load(file)
         
         pos_dict = write_pos_dict(input_data=id_dict)
-        write_data(input_data=pos_dict, file_name="posid_update")
+        write_data(input_data=pos_dict, file_name="posId")
     except Exception as error:
         print(f"Error message: {error}")
