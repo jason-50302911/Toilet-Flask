@@ -42,15 +42,26 @@ def add_uuid(data: list) -> list:
         
 def sort_for_type(name: str) -> str:
     type_name = None
+    type_number = None
     conv_store = ["統一超商", "全家", "萊爾富", "7-11", "來來", "OK", "超商"]
     gas_sta = ["加油站", "中油", "統一精工"]
-    chain_store = ["摩斯", "麥當勞", "星巴克", "家樂福", "全聯", "肯德基", "KFC", "寶雅", "85度", "特力屋", "千葉", "爭鮮", "吉野家"]
+    chain_store = ["摩斯", "麥當勞", "星巴克", "家樂福", "全聯", "肯德基", "KFC", "寶雅", "85度", "特力屋", "千葉", "爭鮮", "吉野家", "路易．莎咖啡"]
     
-    if name in conv_store:
+    for conv in conv_store:
+        if conv in name: type_number = 1
+    
+    for gas in gas_sta:
+        if gas in name: type_number = 2
+    
+    for chain in chain_store:
+        if chain in name: type_number = 3
+    
+    
+    if type_number == 1:
         type_name = "便利商店"
-    elif name in gas_sta:
+    elif type_number == 2:
         type_name = "加油站"
-    elif name in chain_store:
+    elif type_number == 3:
         type_name = "連鎖商店"
     else: 
         type_name = "公廁"
@@ -129,6 +140,6 @@ if __name__ == "__main__":
         # obey_data_rule(data=id_dict)
         # grab_type2(data=id_dict)
         create_sort(data=id_dict)
-        write_data(input_data=id_dict, file_name="idDict1")
+        write_data(input_data=id_dict, file_name="idDict")
     except Exception as error:
         print(f"Error message: {error}")

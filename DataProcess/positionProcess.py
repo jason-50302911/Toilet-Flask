@@ -133,7 +133,6 @@ def create_id_data(data: list, sample: dict, index: int, number_check: int) -> i
         "uuid": index,
         "name": sample["name"],
         "address": sample["address"],
-        "type": toilet_identify(toilet_type=sample["type"]),
         "lat": cut_lat,
         "lng": cut_lng,
         "patterns": sample["patterns"],

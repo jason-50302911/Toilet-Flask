@@ -26,12 +26,12 @@ def create_small_aggre_data(layer2_data: list, compar_list: list, number_check: 
             "id": sample["number"],
             "name": name,
             "type": toilet_identify(toilet_type=sample["type"]),
+            "type3": sample["type3"],
             "floor": sample["floor"]
         }
         store_block = {
             "name": sample["name"],
             "address": sample["address"],
-            "type": toilet_identify(toilet_type=sample["type"]),
             "latitude": sample["latitude"],
             "longitude": sample["longitude"],
             "patterns": sample["patterns"],
