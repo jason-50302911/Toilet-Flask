@@ -10,8 +10,6 @@ def obey_data_rule(data: dict) -> dict:
         for sec_value in header_value.values():
             for sample in sec_value:
                 keys = sample.keys()
-                if "spare" not in keys:
-                    sample["spare"] = []
                 if "facilities" not in keys:
                     sample["facilities"] = []
                  
