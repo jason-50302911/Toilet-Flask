@@ -96,6 +96,7 @@ class DataFetch:
         lngEast = float(bounds["lngEast"])
         data = []
         tra_data = []
+        number = 0
         
         if (latNorth > 28 or latSouth < 20) or (lngEast > 124 or lngWest < 117):
             return data
@@ -111,18 +112,17 @@ class DataFetch:
                     data.append(filter_list)
                     
             data = [item for sublist in data for item in sublist]
-            data_length = len (data)
+            data_length = len(data)
             
             if data_length <= 75 or data_length == 0:
                 tra_data = data
             else:
                 data_diff = math.floor(len(data) / 75)
-                for index, _ in enumerate(data):
-                    if data[index]["patterns"] == "顧客使用" or data[index]["patterns"] == "收費廁所":
-                        tra_data.append(data[index])
+                for index, sample in enumerate(data):
+                    if sample["patterns"] == "顧客使用" or sample["patterns"] == "收費廁所":
+                        tra_data.append(sample)
                     elif index % data_diff == 0:
-                        tra_data.append(data[index])       
-        
+                        tra_data.append(sample)       
         return tra_data
  
     
