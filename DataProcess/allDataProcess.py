@@ -10,8 +10,8 @@ def obey_data_rule(data: dict) -> dict:
         for sec_value in header_value.values():
             for sample in sec_value:
                 keys = sample.keys()
-                if "actname" not in keys:
-                    sample["actname"] = sample["name"]
+                if "spare" not in keys:
+                    sample["spare"] = []
                 
     print(number)
                 
@@ -72,7 +72,7 @@ def create_sort(data: dict) -> None:
     for header_value in tqdm(data.values()):
         for sec_value in header_value.values():
             for sample in sec_value:
-                if sample["type2"] == "一般商家":
+                if sample["type2"] == "一般商家" or sample["type2"] == "連鎖商家":
                     sample["type3"] = sample["type2"]
                 else:
                     type3 = sort_for_type(name=sample["name"])
