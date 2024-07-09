@@ -43,6 +43,16 @@
             margin-top: 20px;
         }
     </style>
+    <script>
+        $(document).ready(function() {
+            liff.init({
+                liffId: "2005737851-EOzaJ8Ka"
+            });
+        });
+        function liff_closeWindow() {
+            liff.closeWindow();
+        }
+    <script>
 </head>
 <body>
     <div class="container">
@@ -53,7 +63,7 @@
             <p><strong>日期：</strong>2024年7月11日</p>
             <p><strong>金額：</strong>NT$ 30</p>
         </div>
-        <a href="#" class="button">回到首頁</a>
+        <button class="button" onclick={{liff_closeWindow()}}>回到LINE BOT</button>
     </div>
 </body>
 </html>
