@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
     <title>付款完成</title>
     <style>
         body {
@@ -44,11 +46,10 @@
         }
     </style>
     <script>
-        $(document).ready(function() {
-            liff.init({
-                liffId: "2005737851-EOzaJ8Ka"
-            });
-        });
+        function liff_getOS() {
+            var OS = liff.getOS();
+            alert(OS);
+        }
         function liff_closeWindow() {
             liff.closeWindow();
         }
@@ -63,7 +64,7 @@
             <p><strong>日期：</strong>2024年7月11日</p>
             <p><strong>金額：</strong>NT$ 30</p>
         </div>
-        <button class="button" onclick={{liff_closeWindow()}}>回到LINE BOT</button>
+        <button class="button" onclick="liff_closeWindow()">回到LINE BOT</button>
     </div>
 </body>
 </html>
