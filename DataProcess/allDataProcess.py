@@ -12,7 +12,9 @@ def obey_data_rule(data: dict) -> dict:
                 keys = sample.keys()
                 if "spare" not in keys:
                     sample["spare"] = []
-                
+                if "facilities" not in keys:
+                    sample["facilities"] = []
+                 
     print(number)
                 
 def comb_name(data: dict, check_name: list) -> dict:
@@ -137,9 +139,9 @@ if __name__ == "__main__":
         # comb_name(data=id_dict, check_name=check_name)
         # add_uuid(data=easy_list)
         # comb_pos(data=easy_list, pos_id=pos_id)
-        # obey_data_rule(data=id_dict)
+        obey_data_rule(data=id_dict)
         # grab_type2(data=id_dict)
-        create_sort(data=id_dict)
+        # create_sort(data=id_dict)
         write_data(input_data=id_dict, file_name="idDict")
     except Exception as error:
         print(f"Error message: {error}")

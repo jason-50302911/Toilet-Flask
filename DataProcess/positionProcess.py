@@ -138,6 +138,7 @@ def create_id_data(data: list, sample: dict, index: int, number_check: int) -> i
         "patterns": sample["patterns"],
         "spare": sample["spare"],
         "type3": sample["type3"],
+        "facilities": sample["facilities"],
         "time": sample["time"],
         "floorList": create_floor_list(data=sample["aggregate"]),
         "aggregate": sample["aggregate"]

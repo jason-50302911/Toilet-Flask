@@ -26,7 +26,6 @@ def create_small_aggre_data(layer2_data: list, compar_list: list, number_check: 
             "id": sample["number"],
             "name": name,
             "type": toilet_identify(toilet_type=sample["type"]),
-            "type3": sample["type3"],
             "floor": sample["floor"],
         }
         store_block = {
@@ -38,6 +37,7 @@ def create_small_aggre_data(layer2_data: list, compar_list: list, number_check: 
             "time": time,
             "spare": sample["spare"],
             "type3": sample["type3"],
+            "facilities": sample["facilities"],
             "aggregate": [store_few_info]
         }
         if len(compar_list) == 0: 
