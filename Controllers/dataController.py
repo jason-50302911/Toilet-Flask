@@ -118,7 +118,7 @@ class DataFetch:
             else:
                 data_diff = math.floor(len(data) / 75)
                 for index, _ in enumerate(data):
-                    if data[index]["patterns"] == "店內消費使用" or data[index]["partterns"] == "收費廁所":
+                    if data[index]["patterns"] == "顧客使用" or data[index]["partterns"] == "收費廁所":
                         tra_data.append(data[index])
                     elif index % data_diff == 0:
                         tra_data.append(data[index])       
