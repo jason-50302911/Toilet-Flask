@@ -34,7 +34,7 @@ def create_small_aggre_data(layer2_data: list, compar_list: list, number_check: 
             "latitude": sample["latitude"],
             "longitude": sample["longitude"],
             "patterns": sample["patterns"],
-            "time": time,
+            "time": sample["time"],
             "spare": sample["spare"],
             "type3": sample["type3"],
             "facilities": sample["facilities"],
@@ -88,7 +88,7 @@ def create_pos_list(data: dict) -> list:
             
 if __name__ == "__main__":
     try: 
-        with open("data/idDict1.json", mode="r", encoding="utf-8-sig") as file:
+        with open("data/idDict.json", mode="r", encoding="utf-8-sig") as file:
             toilet_data_json = json.load(file)
         pos_list = create_pos_list(data=toilet_data_json)
         write_data(input_data=pos_list, file_name="posList")
