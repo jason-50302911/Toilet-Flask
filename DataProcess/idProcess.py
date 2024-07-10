@@ -30,30 +30,31 @@ def sort_id(input_data: list) -> dict:
         
         check_city_id(check_dict=check_dict, city_id=city_id)
         
-        if "廁所" not in sample["name"]:
-            sample["name"] = sample["name"] + "廁所"
         
         init_dict[key][city_id].append(sample)
         
     return init_dict
 
 def put_data(data: list, ref_data: dict) -> dict:
+    number = 0
     for sample in tqdm(data):
         key = sample["number"][0]
         city_id = sample["number"][1:3]
         print(len(ref_data[key][city_id]))
         ref_data[key][city_id].append(sample)
         print(len(ref_data[key][city_id]))
+        number += 1
+    print(number)
 
 if __name__ == "__main__":
     try:
-        with open("data/easyToilet.json", mode="r", encoding="utf-8-sig") as file:
+        with open("data/borrowData1.json", mode="r", encoding="utf-8-sig") as file:
             easy_toilet = json.load(file)
         
-        with open("data/idDictOK.json", mode="r", encoding="utf-8-sig") as file:
+        with open("data/idDict.json", mode="r", encoding="utf-8-sig") as file:
             id_ok = json.load(file)
             
         put_data(data=easy_toilet, ref_data=id_ok)
-        write_data(input_data=id_ok, file_name="idDictSuccess")
+        write_data(input_data=id_ok, file_name="idDict1")
     except Exception as error:
         print(f"Error message: {error}")

@@ -9,22 +9,22 @@ def create_small_aggre_data(layer2_data: list, compar_list: list, number_check: 
     for sample in layer2_data:
         check_flag = False
         time = None
+        # breakpoint()
+        # if len(sample["time"]["星期一"]) == 0 and len(sample["time"]["星期二"]) == 0:
+        #     time = { "星期一": [], "星期二": [], "星期三": [], "星期四": [], "星期五": [], "星期六": [], "星期日": [] }
+        # else:
+        #     time = sample["time"]
         
-        if len(sample["time"]["星期一"]) == 0 and len(sample["time"]["星期二"]) == 0:
-            time = { "星期一": [], "星期二": [], "星期三": [], "星期四": [], "星期五": [], "星期六": [], "星期日": [] }
-        else:
-            time = sample["time"]
-        
-        name = None
-        keys = sample.keys()    
-        if "actname" not in keys:
-            name = sample["name"]
-        else:
-            name = sample["actname"]
+        # name = None
+        # keys = sample.keys()    
+        # if "actname" not in keys:
+        #     name = sample["name"]
+        # else:
+        #     name = sample["actname"]
             
         store_few_info = {
             "id": sample["number"],
-            "name": name,
+            "name": sample["actname"],
             "type": toilet_identify(toilet_type=sample["type"]),
             "floor": sample["floor"],
         }
@@ -88,7 +88,7 @@ def create_pos_list(data: dict) -> list:
             
 if __name__ == "__main__":
     try: 
-        with open("data/idDict.json", mode="r", encoding="utf-8-sig") as file:
+        with open("data/idDict1.json", mode="r", encoding="utf-8-sig") as file:
             toilet_data_json = json.load(file)
         pos_list = create_pos_list(data=toilet_data_json)
         write_data(input_data=pos_list, file_name="posList")

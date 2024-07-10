@@ -4,16 +4,54 @@ from positionProcess import write_data, id_encoder
 from tqdm.auto import tqdm
 import itertools 
 
-def obey_data_rule(data: dict) -> dict:
+def obey_data_rule(data: list) -> list:
     number = 0
-    for header_value in tqdm(data.values()):
-        for sec_value in header_value.values():
-            for sample in sec_value:
-                keys = sample.keys()
-                if "facilities" not in keys:
-                    sample["facilities"] = []
-                 
+    return_list = []
+    
+    for sample in tqdm(data):
+        city = create_city(address=sample["address"])
+        if city is not None: 
+            number += 1
+            sample["actname"] = sample["name"]
+            sample["type2"] = "餐廳"
+            sample["grade"] = "優等級"
+            sample["spare"] = []
+            sample["time"] = {
+                    "星期一": [],
+                    "星期二": [],
+                    "星期三": [],
+                    "星期四": [],
+                    "星期五": [],
+                    "星期六": [],
+                    "星期日": []
+                },
+            sample["administration"] = "商家"
+            sample["floor"] = "1F"
+            sample["type"] = "混合廁所"
+            sample["type3"] = "一般商家"
+            sample["facilities"] = []
+            sample["city"] = city
+            
+            return_list.append(sample)
+                         
     print(number)
+    return return_list
+    
+def create_city(address: str) -> str:
+    return_string = ""
+    check = False
+    
+    if "區" not in address:
+        return None 
+    else:
+        for char in address[3:]:
+            if char == "區":
+                return_string += char
+                check = True
+            elif check is False:
+                return_string += char
+                
+        return return_string
                 
 def comb_name(data: dict, check_name: list) -> dict:
     number = 0
@@ -127,7 +165,7 @@ def aggre_name(data: list) -> list:
                 
 if __name__ == "__main__":
     try:
-        with open("data/idDict.json", mode="r", encoding="utf-8-sig") as file:
+        with open("data/borrowData.json", mode="r", encoding="utf-8-sig") as file:
             id_dict = json.load(file)
     
         # with open("data/checkName.json", mode="r", encoding="utf-8-sig") as file:
@@ -137,9 +175,9 @@ if __name__ == "__main__":
         # comb_name(data=id_dict, check_name=check_name)
         # add_uuid(data=easy_list)
         # comb_pos(data=easy_list, pos_id=pos_id)
-        obey_data_rule(data=id_dict)
+        return_data = obey_data_rule(data=id_dict)
         # grab_type2(data=id_dict)
         # create_sort(data=id_dict)
-        write_data(input_data=id_dict, file_name="idDict")
+        write_data(input_data=return_data, file_name="borrowData1")
     except Exception as error:
         print(f"Error message: {error}")
